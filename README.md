@@ -11,7 +11,7 @@ Projeto desenvolvido para o curso de Engenharia de Dados com Spark e Delta Lake,
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌───────────────────┐
-│   SQL Server    │────▶│   MinIO (S3)     │────▶│   Delta Lake     │
+│   SQL Server    │────▶│   MinIO (S3)     │────▶│   Delta Lake      │
 │   2025 Dev      │     │   landing-zone/  │     │   bronze/         │
 │                 │     │   (CSVs)         │     │   (Delta Tables)  │
 │   SeguroDB      │     │                  │     │                   │
