@@ -81,9 +81,10 @@ sudo curl https://packages.microsoft.com/config/ubuntu/24.04/prod.list | sudo te
 sudo apt update
 sudo ACCEPT_EULA=Y apt install -y msodbcsql18
 ```
-#### 4.1. Validar instalação do ODBC Driver
+### 4.1. Validar instalação do ODBC Driver - Client SQL Server (Ubuntu)
 
 ```bash
+# Ubuntu 24.04
 odbcinst -q -d
 ```
 
