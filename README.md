@@ -71,7 +71,7 @@ source .venv/bin/activate
 uv sync
 ```
 
-### 4. Instalar ODBC Driver (se necessário)
+### 4. Instalar ODBC Driver - Client SQL Server (Ubuntu)
 
 ```bash
 # Ubuntu 24.04
@@ -81,6 +81,13 @@ sudo curl https://packages.microsoft.com/config/ubuntu/24.04/prod.list | sudo te
 sudo apt update
 sudo ACCEPT_EULA=Y apt install -y msodbcsql18
 ```
+#### 4.1. Validar instalação do ODBC Driver
+
+```bash
+odbcinst -q -d
+```
+
+Deve retornar `[ODBC Driver 18 for SQL Server]`.
 
 ## Executando o Projeto
 
