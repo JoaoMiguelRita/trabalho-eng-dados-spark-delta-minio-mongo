@@ -18,8 +18,8 @@ Projeto desenvolvido para o curso de Engenharia de Dados com Spark e Delta Lake,
 │   11 tabelas    │     │   1 CSV/tabela   │     │   INSERT/UPDATE   │
 │                 │     │                  │     │   DELETE/HISTORY  │
 └─────────────────┘     └──────────────────┘     └───────────────────┘
-     Notebook 00             Notebook 01              Notebooks 02/03
-     (Setup)                 (Extração)               (Delta + DML)
+     Notebook 00             Notebook 01            Notebooks 02/03
+     (Setup)                 (Extração)             (Delta + DML)
 ```
 
 ## Pré-requisitos
