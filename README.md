@@ -130,24 +130,6 @@ spark-delta-minio-sqlserver/
 └── README.md
 ```
 
-## Dados de Exemplo
-
-O projeto utiliza 11 tabelas de um sistema fictício de seguros de automóveis:
-
-| Tabela     | Registros | Descrição                    |
-|------------|-----------|------------------------------|
-| regiao     | 5         | Regiões do Brasil            |
-| estado     | 27        | Estados                      |
-| municipio  | 5.570     | Municípios                   |
-| marca      | 10        | Marcas de automóveis         |
-| modelo     | 100       | Modelos de automóveis        |
-| cliente    | 20.010    | Clientes                     |
-| endereco   | 20.010    | Endereços dos clientes       |
-| telefone   | 20.010    | Telefones dos clientes       |
-| carro      | 10.003    | Veículos segurados           |
-| apolice    | 10.000    | Apólices de seguro           |
-| sinistro   | 10.000    | Registros de sinistros       |
-
 ## Tecnologias Utilizadas
 
 - **Apache Spark 3.5.3** (PySpark) — Motor de processamento distribuído
