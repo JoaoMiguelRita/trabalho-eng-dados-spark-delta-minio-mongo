@@ -1,6 +1,6 @@
 # Projeto Apache Spark + Delta Lake + MinIO + SQL Server
 
-Projeto desenvolvido para demonstração prática do fluxo completo de engenharia de dados:
+Projeto desenvolvido para o curso de Engenharia de Dados com Spark e Delta Lake, lendo os dados de um databases SQL Server e carregando no MinIO.
 
 1. **Extração** de tabelas de um banco SQL Server 2025
 2. **Carga** no MinIO (Object Storage compatível com S3) no formato CSV
@@ -10,14 +10,14 @@ Projeto desenvolvido para demonstração prática do fluxo completo de engenhari
 ## Arquitetura
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+┌─────────────────┐     ┌──────────────────┐     ┌───────────────────┐
 │   SQL Server    │────▶│   MinIO (S3)     │────▶│   Delta Lake     │
-│   2025 Dev      │     │   landing-zone/  │     │   bronze/        │
-│                 │     │   (CSVs)         │     │   (Delta Tables) │
-│   SeguroDB      │     │                  │     │                  │
-│   11 tabelas    │     │   1 CSV/tabela   │     │   INSERT/UPDATE  │
+│   2025 Dev      │     │   landing-zone/  │     │   bronze/         │
+│                 │     │   (CSVs)         │     │   (Delta Tables)  │
+│   SeguroDB      │     │                  │     │                   │
+│   11 tabelas    │     │   1 CSV/tabela   │     │   INSERT/UPDATE   │
 │                 │     │                  │     │   DELETE/HISTORY  │
-└─────────────────┘     └──────────────────┘     └──────────────────┘
+└─────────────────┘     └──────────────────┘     └───────────────────┘
      Notebook 00             Notebook 01              Notebooks 02/03
      (Setup)                 (Extração)               (Delta + DML)
 ```
