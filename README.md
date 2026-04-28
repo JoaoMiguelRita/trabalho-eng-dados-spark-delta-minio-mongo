@@ -107,11 +107,11 @@ Execute os notebooks **em ordem**:
 
 ```
 spark-delta-minio-sqlserver/
-├── docker-compose.yml          # SQL Server 2025 + MinIO
-├── .env.example                # Template de variáveis de ambiente
-├── pyproject.toml              # Dependências Python (UV)
-├── .python-version             # Python 3.11
-├── data/                       # CSVs de dados de exemplo
+├── docker-compose.yml                # SQL Server 2025 + MinIO
+├── .env.example                      # Template de variáveis de ambiente
+├── pyproject.toml                    # Dependências Python (UV)
+├── .python-version                   # Python 3.11
+├── data/                             # CSVs de dados de exemplo
 │   ├── regiao.csv
 │   ├── estado.csv
 │   ├── municipio.csv
@@ -123,10 +123,10 @@ spark-delta-minio-sqlserver/
 │   ├── carro.csv
 │   ├── apolice.csv
 │   └── sinistro.csv
-├── 00_setup_sqlserver.ipynb    # Setup: CSV → SQL Server
-├── 01_sqlserver_to_minio_csv.ipynb  # Extração: SQL Server → MinIO (CSV)
-├── 02_csv_to_delta.ipynb       # Conversão: CSV → Delta Lake
-├── 03_dml_delta.ipynb          # DML: INSERT, UPDATE, DELETE
+├── 00_setup_sqlserver.ipynb          # Setup: CSV → SQL Server
+├── 01_sqlserver_to_minio_csv.ipynb   # Extração: SQL Server → MinIO (CSV)
+├── 02_csv_to_delta.ipynb             # Conversão: CSV → Delta Lake
+├── 03_dml_delta.ipynb                # DML: INSERT, UPDATE, DELETE
 └── README.md
 ```
 
