@@ -1,3 +1,15 @@
+ ## EFETUAR OS COMANDOS OBRIGATÓRIOS:
+
+ - Sincronizar o uv local com as dependencia que estão nesse projeto
+ ```bash
+  uv sync
+```
+
+- Subir o container que já está configurado no `docker-compose`
+ ```bash
+  docker compose up -d
+```
+
 Continuação do trabalho
 
 após rodar o notebook '01_mongodb_to_minio_json.ipynb': http://localhost:9021
