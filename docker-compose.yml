@@ -1,16 +1,14 @@
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2025-latest
-    container_name: sqlserver-2025
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-local
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "SqlServer@2025!"
-      MSSQL_PID: "Developer"
+      MONGO_INITDB_ROOT_USERNAME: "admin"
+      MONGO_INITDB_ROOT_PASSWORD: "1234"
     ports:
-      - "1433:1433"
+      - "27017:27017"
     volumes:
-      - sqlserver-data:/var/opt/mssql
-      - ./data:/var/opt/mssql/data-import
+      - mongo-data:/data/db
     restart: unless-stopped
 
   minio:
@@ -28,5 +26,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  sqlserver-data:
+  mongo-data:
   minio-data:

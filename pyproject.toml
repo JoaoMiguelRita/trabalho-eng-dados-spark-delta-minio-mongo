@@ -1,5 +1,5 @@
 [project]
-name = "spark-delta-minio-sqlserver"
+name = "trabalho-eng-spark-delta-minio-sqlserver"
 version = "0.1.0"
 description = "Projeto Apache Spark com Delta Lake, MinIO e SQL Server"
 readme = "README.md"
@@ -11,6 +11,7 @@ dependencies = [
     "ipykernel>=6.29.0",
     "pandas>=2.2.0",
     "pyodbc>=5.1.0",
+    "pymongo>=4.0.0",
     "pyspark==3.5.3",
     "python-dotenv>=1.0.0",
 ]
