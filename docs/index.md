@@ -1,104 +1,122 @@
-# Projeto Apache Spark + Delta Lake + MinIO + MongoDB
+![Spark](https://img.shields.io/badge/Apache%20Spark-3.5.3-orange)
+![Delta Lake](https://img.shields.io/badge/Delta%20Lake-3.2.0-blue)
+![MongoDB](https://img.shields.io/badge/MongoDB-Latest-green)
+![MinIO](https://img.shields.io/badge/MinIO-S3-red)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue)
 
-## Visão Geral
 
-Este projeto foi desenvolvido para prática de **Engenharia de Dados**, utilizando uma arquitetura moderna com:
+# Data Lakehouse Pipeline — MongoDB → MinIO → Delta Lake
 
-- Apache Spark
-- Delta Lake
-- MinIO
-- MongoDB
-- Docker Compose
-
-O objetivo principal é simular um pipeline real de dados, realizando a extração de informações de um banco NoSQL, persistência em Object Storage e transformação para tabelas Delta Lake na camada Bronze.
+!!! info "Objetivo do Projeto"
+    Este projeto foi desenvolvido como prática de **Engenharia de Dados**, focando em uma arquitetura moderna para extração, armazenamento e governança de dados. O fluxo principal realiza a ingestão de um banco NoSQL para um Object Storage, finalizando com a estruturação em tabelas Delta.
 
 ---
 
-## Fluxo do Projeto
+##  Visão Geral
 
-### Etapas principais
+A arquitetura utiliza o conceito de **Data Lakehouse**, permitindo transações ACID e versionamento de dados em um ambiente local escalável.
 
-1. Extração de coleções do MongoDB
-2. Persistência dos dados em JSON no MinIO (landing-zone)
-3. Conversão dos arquivos JSON para tabelas Delta Lake (bronze)
-4. Manipulação com comandos DML:
-   - INSERT
-   - UPDATE
-   - DELETE
-5. Exploração de recursos como:
-   - HISTORY
-   - TIME TRAVEL
+*   **Extração**: Dados originados de coleções do **MongoDB**.
+*   **Storage**: Persistência inicial em **MinIO** (S3-Compatible).
+*   **Processamento**: Transformação e conversão via **Apache Spark**.
+*   **Governança**: Tabelas estruturadas com **Delta Lake**.
+*   **Infraestrutura**: Orquestração via **Docker Compose**.
 
 ---
 
-## Arquitetura
+## Fluxo de Dados
 
-```text
-┌─────────────────┐     ┌──────────────────┐     ┌───────────────────┐
-│     MongoDB     │────▶│   MinIO (S3)     │────▶│   MinIO (S3)      │
-│      Local      │     │   landing-zone/  │     │   bronze/         │
-│                 │     │   (JSONs)        │     │   (Delta Tables)  │
-│ VendasArCondic. │     │                  │     │                   │
-│   4 Coleções    │     │  1 JSON/coleção  │     │ INSERT/UPDATE     │
-│                 │     │                  │     │ DELETE/HISTORY    │
-└─────────────────┘     └──────────────────┘     └───────────────────┘
+O pipeline segue etapas rigorosas para garantir a integridade da informação:
+
+1.  **Ingestão**: Conexão com o MongoDB e extração de 4 coleções de vendas.
+2.  **Landing Zone**: Salvamento dos dados brutos em formato `JSON` no MinIO.
+3.  **Bronze Layer**: Conversão dos arquivos JSON para tabelas `Delta`, garantindo tipagem correta.
+4.  **DML Operations**: Realização de testes de manipulação com `INSERT`, `UPDATE` e `DELETE`.
+5.  **Data Governance**: Auditoria de dados utilizando `HISTORY` e `TIME TRAVEL`.
+
+---
+
+## Arquitetura do Projeto
+
+A arquitetura do projeto segue o modelo de **Landing Zone → Bronze Layer**, utilizando MongoDB como origem dos dados, MinIO como Data Lake e Delta Lake para persistência transacional.
+
+| Etapa | Origem / Destino | Descrição |
+|---|---|---|
+| Notebook 00 | MongoDB Local | Criação da base `VendasArCondicionado` com 4 coleções e carga inicial de dados fictícios |
+| Notebook 01 | MongoDB → MinIO | Extração das coleções e armazenamento em JSON no bucket `landing-zone` |
+| Notebooks 02/03 | MinIO → Delta Lake | Conversão dos JSONs em tabelas Delta no bucket `bronze`, com operações DML e Time Travel |
+
+---
+
+### Fluxo da Pipeline
+
+| Etapa | Origem / Destino | Detalhes |
+|---|---|---|
+| 1 | MongoDB Local | Base `VendasArCondicionado` com 4 coleções de dados |
+| 2 | MinIO (S3) → `landing-zone/` | Armazenamento dos arquivos JSON extraídos do MongoDB |
+| 3 | MinIO (S3) → `bronze/` | Conversão dos JSONs em tabelas Delta Lake |
+| 4 | Delta Lake | Operações `INSERT`, `UPDATE`, `DELETE`, `HISTORY` e `TIME TRAVEL` |
+
+---
+
+### Responsabilidade dos Notebooks
+
+| Notebook | Responsabilidade |
+|---|---|
+| Notebook 00 | Setup inicial e geração de dados fictícios |
+| Notebook 01 | Extração MongoDB → MinIO (JSON) |
+| Notebook 02 | Conversão JSON → Delta Lake |
+| Notebook 03 | Operações DML, versionamento e Time Travel |
 
 
-Tecnologias Utilizadas
-Apache Spark 3.5.3
+## Tecnologias Utilizadas
 
-Motor de processamento distribuído para transformação e manipulação de dados.
+| Tecnologia | Versão | Função |
+| :--- | :--- | :--- |
+| **Apache Spark** | 3.5.3 | Motor de processamento distribuído. |
+| **Delta Lake** | 3.2.0 | Armazenamento com transações ACID. |
+| **MinIO** | Latest | Object Storage compatível com S3. |
+| **MongoDB** | Latest | Banco de dados NoSQL. |
+| **Docker Compose** | V2 | Orquestração da infraestrutura. |
 
-Delta Lake 3.2.0
 
-Formato de armazenamento com suporte a transações ACID e versionamento.
+## Resultados e Conceitos
+!!! success "Resultados Alcançados"
+- Pipeline Funcional: 4 coleções processadas com sucesso.
+- Consistência: JSONs persistidos na Landing Zone.
+- Evolução: Conversão para Delta Lake concluída.
+- Versionamento: Histórico de dados validado.
 
-MinIO
+## Conceitos Demonstrados
 
-Object Storage local compatível com Amazon S3.
+- **Arquitetura Medalhão**  
+  Transição eficiente entre Landing Zone e Bronze Layer.
 
-MongoDB
+- **Tratamento de Dados**  
+  Conversão de `ObjectId` para `String`.
 
-Banco de dados NoSQL orientado a documentos.
+- **Transações ACID**  
+  Garantia de integridade nas escritas.
 
-Docker Compose
+- **Time Travel**  
+  Restauração de estados anteriores da base.
 
-Responsável pela orquestração da infraestrutura local.
+## Próximos Passos
 
-Resultados Obtidos
-4 coleções extraídas com sucesso do MongoDB
-JSONs persistidos no bucket landing-zone
-Conversão concluída para Delta Lake
-Operações INSERT, UPDATE e DELETE executadas com sucesso
-Histórico de versões validado com Delta HISTORY
-Recuperação de versões anteriores com TIME TRAVEL
-Conceitos Demonstrados
-Engenharia de Dados aplicada
-Arquitetura Medalhão (Landing → Bronze)
-Object Storage como Data Lake
-Conversão de tipos (ObjectId → String)
-Processamento distribuído com Spark
-Versionamento e governança com Delta Lake
-Transações ACID em Data Lakes
-Próximos Passos
-Camada Silver
+-  **Camada Silver**  
+  Implementar limpeza, padronização e regras de qualidade dos dados.
 
-Adicionar uma nova camada com:
+-  **Orquestração com Apache Airflow**  
+  Automatizar o pipeline completo utilizando workflows agendados e monitorados.
 
-limpeza de dados
-padronização
-joins
-regras de qualidade
-Orquestração com Airflow
+---
 
-Automatizar o pipeline com Apache Airflow para elevar o projeto a um nível mais próximo do mercado.
+## Autores
 
-Autores
+| Nome | Instituição | GitHub |
+|---|---|---|
+| Gustavo de Freitas Cardoso | Engenharia de Software — SATC | [perfil](https://github.com/GustavodeFreitasCardoso) |
+| João Miguel Rita | Engenharia de Software — SATC | [perfil](https://github.com/JoaoMiguelRita) |
 
-Gustavo de Freitas Cardoso
-Engenharia da Computação — SATC
-GitHub: https://github.com/GustavodeFreitasCardoso
 
-João Miguel Rita
-Engenharia da Computação — SATC
-GitHub: https://github.com/JoaoMiguelRita
+
