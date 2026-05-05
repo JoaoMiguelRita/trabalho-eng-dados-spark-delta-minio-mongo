@@ -1,1 +1,35 @@
-site_name: Documentação trabalho de spark com delta migrando mongoDB com MinIO
+site_name: Projeto Spark + Delta Lake + MinIO + MongoDB
+site_description: Documentação do projeto de Engenharia de Dados com Apache Spark, Delta Lake, MinIO e MongoDB
+site_author: Gustavo de Freitas Cardoso e João Miguel Rita
+site_url: https://gustavodefreitascardoso.github.io/trabalho-eng-dados-spark-delta-minio-mongo/
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    - scheme: default
+      primary: blue
+      accent: indigo
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Início: index.md
+
+plugins:
+  - search
+
+dev_addr: '0.0.0.0:8000'
