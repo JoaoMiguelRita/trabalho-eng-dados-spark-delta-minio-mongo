@@ -1,0 +1,871 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto de Engenharia de Dados com Apache Spark, Delta Lake, MinIO e MongoDB">
+      
+      
+        <meta name="author" content="Gustavo de Freitas Cardoso e João Miguel Rita">
+      
+      
+        <link rel="canonical" href="https://gustavodefreitascardoso.github.io/trabalho-eng-dados-spark-delta-minio-mongo/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Projeto Spark + Delta Lake + MinIO + MongoDB</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#data-lakehouse-pipeline-mongodb-minio-delta-lake" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="." title="Projeto Spark + Delta Lake + MinIO + MongoDB" class="md-header__button md-logo" aria-label="Projeto Spark + Delta Lake + MinIO + MongoDB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Projeto Spark + Delta Lake + MinIO + MongoDB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Início
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Projeto Spark + Delta Lake + MinIO + MongoDB" class="md-nav__button md-logo" aria-label="Projeto Spark + Delta Lake + MinIO + MongoDB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Projeto Spark + Delta Lake + MinIO + MongoDB
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visão Geral
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluxo-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluxo de Dados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitetura-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitetura do Projeto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Arquitetura do Projeto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fluxo-da-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluxo da Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsabilidade-dos-notebooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsabilidade dos Notebooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tecnologias-utilizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tecnologias Utilizadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resultados-e-conceitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resultados e Conceitos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceitos-demonstrados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceitos Demonstrados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proximos-passos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Próximos Passos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autores
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visão Geral
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluxo-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluxo de Dados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitetura-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitetura do Projeto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Arquitetura do Projeto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fluxo-da-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluxo da Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsabilidade-dos-notebooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsabilidade dos Notebooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tecnologias-utilizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tecnologias Utilizadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resultados-e-conceitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resultados e Conceitos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceitos-demonstrados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceitos Demonstrados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proximos-passos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Próximos Passos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autores
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<p><img alt="Spark" src="https://img.shields.io/badge/Apache%20Spark-3.5.3-orange" />
+<img alt="Delta Lake" src="https://img.shields.io/badge/Delta%20Lake-3.2.0-blue" />
+<img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-Latest-green" />
+<img alt="MinIO" src="https://img.shields.io/badge/MinIO-S3-red" />
+<img alt="Docker" src="https://img.shields.io/badge/Docker-Compose-blue" /></p>
+<h1 id="data-lakehouse-pipeline-mongodb-minio-delta-lake">Data Lakehouse Pipeline — MongoDB → MinIO → Delta Lake<a class="headerlink" href="#data-lakehouse-pipeline-mongodb-minio-delta-lake" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Objetivo do Projeto</p>
+<p>Este projeto foi desenvolvido como prática de <strong>Engenharia de Dados</strong>, focando em uma arquitetura moderna para extração, armazenamento e governança de dados. O fluxo principal realiza a ingestão de um banco NoSQL para um Object Storage, finalizando com a estruturação em tabelas Delta.</p>
+</div>
+<hr />
+<h2 id="visao-geral">Visão Geral<a class="headerlink" href="#visao-geral" title="Permanent link">&para;</a></h2>
+<p>A arquitetura utiliza o conceito de <strong>Data Lakehouse</strong>, permitindo transações ACID e versionamento de dados em um ambiente local escalável.</p>
+<ul>
+<li><strong>Extração</strong>: Dados originados de coleções do <strong>MongoDB</strong>.</li>
+<li><strong>Storage</strong>: Persistência inicial em <strong>MinIO</strong> (S3-Compatible).</li>
+<li><strong>Processamento</strong>: Transformação e conversão via <strong>Apache Spark</strong>.</li>
+<li><strong>Governança</strong>: Tabelas estruturadas com <strong>Delta Lake</strong>.</li>
+<li><strong>Infraestrutura</strong>: Orquestração via <strong>Docker Compose</strong>.</li>
+</ul>
+<hr />
+<h2 id="fluxo-de-dados">Fluxo de Dados<a class="headerlink" href="#fluxo-de-dados" title="Permanent link">&para;</a></h2>
+<p>O pipeline segue etapas rigorosas para garantir a integridade da informação:</p>
+<ol>
+<li><strong>Ingestão</strong>: Conexão com o MongoDB e extração de 4 coleções de vendas.</li>
+<li><strong>Landing Zone</strong>: Salvamento dos dados brutos em formato <code>JSON</code> no MinIO.</li>
+<li><strong>Bronze Layer</strong>: Conversão dos arquivos JSON para tabelas <code>Delta</code>, garantindo tipagem correta.</li>
+<li><strong>DML Operations</strong>: Realização de testes de manipulação com <code>INSERT</code>, <code>UPDATE</code> e <code>DELETE</code>.</li>
+<li><strong>Data Governance</strong>: Auditoria de dados utilizando <code>HISTORY</code> e <code>TIME TRAVEL</code>.</li>
+</ol>
+<hr />
+<h2 id="arquitetura-do-projeto">Arquitetura do Projeto<a class="headerlink" href="#arquitetura-do-projeto" title="Permanent link">&para;</a></h2>
+<p>A arquitetura do projeto segue o modelo de <strong>Landing Zone → Bronze Layer</strong>, utilizando MongoDB como origem dos dados, MinIO como Data Lake e Delta Lake para persistência transacional.</p>
+<table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Origem / Destino</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Notebook 00</td>
+<td>MongoDB Local</td>
+<td>Criação da base <code>VendasArCondicionado</code> com 4 coleções e carga inicial de dados fictícios</td>
+</tr>
+<tr>
+<td>Notebook 01</td>
+<td>MongoDB → MinIO</td>
+<td>Extração das coleções e armazenamento em JSON no bucket <code>landing-zone</code></td>
+</tr>
+<tr>
+<td>Notebooks 02/03</td>
+<td>MinIO → Delta Lake</td>
+<td>Conversão dos JSONs em tabelas Delta no bucket <code>bronze</code>, com operações DML e Time Travel</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="fluxo-da-pipeline">Fluxo da Pipeline<a class="headerlink" href="#fluxo-da-pipeline" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Origem / Destino</th>
+<th>Detalhes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>MongoDB Local</td>
+<td>Base <code>VendasArCondicionado</code> com 4 coleções de dados</td>
+</tr>
+<tr>
+<td>2</td>
+<td>MinIO (S3) → <code>landing-zone/</code></td>
+<td>Armazenamento dos arquivos JSON extraídos do MongoDB</td>
+</tr>
+<tr>
+<td>3</td>
+<td>MinIO (S3) → <code>bronze/</code></td>
+<td>Conversão dos JSONs em tabelas Delta Lake</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Delta Lake</td>
+<td>Operações <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>HISTORY</code> e <code>TIME TRAVEL</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="responsabilidade-dos-notebooks">Responsabilidade dos Notebooks<a class="headerlink" href="#responsabilidade-dos-notebooks" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Responsabilidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Notebook 00</td>
+<td>Setup inicial e geração de dados fictícios</td>
+</tr>
+<tr>
+<td>Notebook 01</td>
+<td>Extração MongoDB → MinIO (JSON)</td>
+</tr>
+<tr>
+<td>Notebook 02</td>
+<td>Conversão JSON → Delta Lake</td>
+</tr>
+<tr>
+<td>Notebook 03</td>
+<td>Operações DML, versionamento e Time Travel</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tecnologias-utilizadas">Tecnologias Utilizadas<a class="headerlink" href="#tecnologias-utilizadas" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tecnologia</th>
+<th style="text-align: left;">Versão</th>
+<th style="text-align: left;">Função</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Apache Spark</strong></td>
+<td style="text-align: left;">3.5.3</td>
+<td style="text-align: left;">Motor de processamento distribuído.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Delta Lake</strong></td>
+<td style="text-align: left;">3.2.0</td>
+<td style="text-align: left;">Armazenamento com transações ACID.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>MinIO</strong></td>
+<td style="text-align: left;">Latest</td>
+<td style="text-align: left;">Object Storage compatível com S3.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>MongoDB</strong></td>
+<td style="text-align: left;">Latest</td>
+<td style="text-align: left;">Banco de dados NoSQL.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Docker Compose</strong></td>
+<td style="text-align: left;">V2</td>
+<td style="text-align: left;">Orquestração da infraestrutura.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="resultados-e-conceitos">Resultados e Conceitos<a class="headerlink" href="#resultados-e-conceitos" title="Permanent link">&para;</a></h2>
+<div class="admonition success">
+<p class="admonition-title">Resultados Alcançados</p>
+</div>
+<ul>
+<li>Pipeline Funcional: 4 coleções processadas com sucesso.</li>
+<li>Consistência: JSONs persistidos na Landing Zone.</li>
+<li>Evolução: Conversão para Delta Lake concluída.</li>
+<li>Versionamento: Histórico de dados validado.</li>
+</ul>
+<h2 id="conceitos-demonstrados">Conceitos Demonstrados<a class="headerlink" href="#conceitos-demonstrados" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Arquitetura Medalhão</strong><br />
+  Transição eficiente entre Landing Zone e Bronze Layer.</p>
+</li>
+<li>
+<p><strong>Tratamento de Dados</strong><br />
+  Conversão de <code>ObjectId</code> para <code>String</code>.</p>
+</li>
+<li>
+<p><strong>Transações ACID</strong><br />
+  Garantia de integridade nas escritas.</p>
+</li>
+<li>
+<p><strong>Time Travel</strong><br />
+  Restauração de estados anteriores da base.</p>
+</li>
+</ul>
+<h2 id="proximos-passos">Próximos Passos<a class="headerlink" href="#proximos-passos" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Camada Silver</strong><br />
+  Implementar limpeza, padronização e regras de qualidade dos dados.</p>
+</li>
+<li>
+<p><strong>Orquestração com Apache Airflow</strong><br />
+  Automatizar o pipeline completo utilizando workflows agendados e monitorados.</p>
+</li>
+</ul>
+<hr />
+<h2 id="autores">Autores<a class="headerlink" href="#autores" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Nome</th>
+<th>Instituição</th>
+<th>GitHub</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gustavo de Freitas Cardoso</td>
+<td>Engenharia de Software — SATC</td>
+<td><a href="https://github.com/GustavodeFreitasCardoso">perfil</a></td>
+</tr>
+<tr>
+<td>João Miguel Rita</td>
+<td>Engenharia de Software — SATC</td>
+<td><a href="https://github.com/JoaoMiguelRita">perfil</a></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
