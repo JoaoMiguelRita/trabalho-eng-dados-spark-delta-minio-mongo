@@ -63,6 +63,7 @@ Crie o ambiente virtual e instale as dependências usando o uv:
     uv venv
     source .venv/bin/activate
     uv sync
+    docker compose up -d
 
 ## Executando o Projeto
 
@@ -106,7 +107,4 @@ Execute os notebooks na seguinte ordem. **Importante:** Certifique-se de selecio
 * Transações ACID e versionamento de dados em Data Lakes.
 
 ## Links e Referências
-* [MongoDB - Documentação Oficial](https://www.mongodb.com/docs/)
-* [MinIO - Documentação](https://min.io/docs/minio/linux/index.html)
-* [Delta Lake - Releases](https://docs.delta.io/latest/index.html)
-* [PyMongo - Documentação](https://pymongo.readthedocs.io/en/stable/)
+* [Repositório base da aplicação](https://github.com/jlsilva01/spark-delta-minio-sqlserver)
